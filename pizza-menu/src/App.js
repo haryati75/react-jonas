@@ -1,3 +1,6 @@
+import React from 'react';
+import './index.css';
+
 const pizzaData = [
   {
     name: 'Focaccia',
@@ -45,26 +48,31 @@ const pizzaData = [
 
 export default function App() {
   return (
-    <>
+    <div className="container">
       <Header />
       <Menu />
       <Footer />
-    </>
+    </div>
   );
 }
 
 function Header() {
-  return <h1>- Fast React Pizza Co. -</h1>;
+  const style = {};
+  return (
+    <header className="header">
+      <h1 style={style}>Fast React Pizza Co. </h1>
+    </header>
+  );
 }
 
 function Menu() {
   return (
-    <section>
+    <main className="menu">
       <h2>Our Menu</h2>
       <Pizza />
       <Pizza />
       <Pizza />
-    </section>
+    </main>
   );
 }
 
@@ -75,14 +83,18 @@ function Footer() {
   const isOpen = hour >= openHour && hour < closeHour;
   console.log('isOpen', isOpen);
 
-  return <footer>We are currently {isOpen ? 'open' : 'closed'}!</footer>;
+  return (
+    <footer className="footer">
+      We are currently {isOpen ? 'open' : 'closed'}!
+    </footer>
+  );
 }
 
 function Pizza() {
   return (
     <>
       <img src="pizzas/spinaci.jpg" alt="Pizza Spinaci" />
-      <h2>Pizza Spinaci</h2>
+      <h3>Pizza Spinaci</h3>
       <p>Tomato, mozarella, spinach, and ricotta cheese</p>
     </>
   );
