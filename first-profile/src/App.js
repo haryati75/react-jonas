@@ -1,6 +1,6 @@
 import './styles.css';
 
-const data = {
+const profileData = {
   name: 'Felix The Cat Coder',
   intro:
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio, ipsam necessitatibus ducimus ab obcaecati doloribus quae fugiat, eum velit, error molestiae illum? Inventore fuga aspernatur, praesentium minus unde eveniet laborum.',
@@ -8,27 +8,27 @@ const data = {
   skills: [
     {
       name: 'HTML+CSS',
-      emoji: '😻',
+      level: 'advanced',
       colour: 'aquamarine',
     },
     {
       name: 'React',
-      emoji: '🐈',
+      level: 'intermediate',
       colour: 'pink',
     },
     {
       name: 'Baking',
-      emoji: '🧁',
+      level: 'beginner',
       colour: 'beige',
     },
     {
       name: 'Javascript',
-      emoji: '😶‍🌫️',
+      level: 'advanced',
       colour: 'orchid',
     },
     {
       name: 'NodeJS+Express',
-      emoji: '🧠',
+      level: 'intermediate',
       colour: 'lightblue',
     },
   ],
@@ -37,10 +37,10 @@ const data = {
 export default function App() {
   return (
     <div className="card">
-      <Avatar name={data.name} photo={data.photo} />
+      <Avatar name={profileData.name} photo={profileData.photo} />
       <div className="data">
-        <Intro name={data.name} intro={data.intro} />
-        <SkillList skills={data.skills} />
+        <Intro name={profileData.name} intro={profileData.intro} />
+        <SkillList skills={profileData.skills} />
       </div>
     </div>
   );
@@ -67,17 +67,23 @@ function SkillList({ skills }) {
   return (
     <div className="skill-list">
       {skills.map((skill, index) => {
-        return <Skill key={index} {...skill} />;
+        return <Skill key={index} skill={skill} />;
       })}
     </div>
   );
 }
 
-function Skill({ name, emoji, colour }) {
+function Skill({ skill: { name, level, colour } }) {
   const style = { backgroundColor: colour };
+
   return (
-    <span style={style} className="skill">
-      {name} {emoji}
-    </span>
+    <div style={style} className="skill">
+      <span>{name}</span>
+      <span>
+        {level === 'beginner' && '👶'}
+        {level === 'intermediate' && '💪'}
+        {level === 'advanced' && '🌟'}
+      </span>
+    </div>
   );
 }
