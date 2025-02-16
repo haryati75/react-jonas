@@ -69,9 +69,9 @@ function Menu() {
   return (
     <main className="menu">
       <h2>Our Menu</h2>
-      <Pizza />
-      <Pizza />
-      <Pizza />
+      {pizzaData.map((pizza) => (
+        <Pizza key={pizza.name} {...pizza} />
+      ))}
     </main>
   );
 }
@@ -90,12 +90,16 @@ function Footer() {
   );
 }
 
-function Pizza() {
+function Pizza({ name, ingredients, price, photoName, soldOut }) {
   return (
-    <>
-      <img src="pizzas/spinaci.jpg" alt="Pizza Spinaci" />
-      <h3>Pizza Spinaci</h3>
-      <p>Tomato, mozarella, spinach, and ricotta cheese</p>
-    </>
+    <div className="pizza">
+      <img src={photoName} alt={name} />
+      <div>
+        <h3>{name}</h3>
+        <p>{ingredients}</p>
+        <p>{price} €</p>
+        {soldOut && <p>Sold Out</p>}
+      </div>
+    </div>
   );
 }
