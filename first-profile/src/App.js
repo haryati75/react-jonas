@@ -67,14 +67,7 @@ function SkillList({ skills }) {
   return (
     <div className="skill-list">
       {skills.map((skill, index) => {
-        return (
-          <Skill
-            key={index}
-            name={skill.name}
-            emoji={skill.emoji}
-            colour={skill.colour}
-          />
-        );
+        return <Skill key={index} {...skill} />;
       })}
     </div>
   );
