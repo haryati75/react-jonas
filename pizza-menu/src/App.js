@@ -46,6 +46,9 @@ const pizzaData = [
   },
 ];
 
+let hasPizza = pizzaData.length > 0;
+// hasPizza = false;
+
 export default function App() {
   return (
     <div className="container">
@@ -69,9 +72,14 @@ function Menu() {
   return (
     <main className="menu">
       <h2>Our Menu</h2>
-      {pizzaData.map((pizza) => (
-        <Pizza key={pizza.name} {...pizza} />
-      ))}
+      {!hasPizza && <p>No pizzas available</p>}
+      {hasPizza && (
+        <ul className="pizzas">
+          {pizzaData.map((pizza) => (
+            <Pizza key={pizza.name} {...pizza} />
+          ))}
+        </ul>
+      )}
     </main>
   );
 }
@@ -85,14 +93,21 @@ function Footer() {
 
   return (
     <footer className="footer">
-      We are currently {isOpen ? 'open' : 'closed'}!
+      {isOpen && hasPizza && (
+        <div className="order">
+          <p>
+            We are open until {closeHour}:00. Come visit us or order online.
+          </p>
+          <button className="btn">Order</button>
+        </div>
+      )}
     </footer>
   );
 }
 
 function Pizza({ name, ingredients, price, photoName, soldOut }) {
   return (
-    <div className="pizza">
+    <li className={`pizza ${soldOut ? 'sold-out' : ''}`}>
       <img src={photoName} alt={name} />
       <div>
         <h3>{name}</h3>
@@ -100,6 +115,6 @@ function Pizza({ name, ingredients, price, photoName, soldOut }) {
         <p>{price} €</p>
         {soldOut && <p>Sold Out</p>}
       </div>
-    </div>
+    </li>
   );
 }
