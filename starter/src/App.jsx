@@ -28,12 +28,16 @@ function TipCalculator() {
         <label>How did your friend like the service?</label>
       </RatingInput>
 
-      <PayWithTip
-        billAmount={billAmount}
-        myRating={myRating}
-        friendRating={friendRating}
-      />
-      <button onClick={handleReset}>Reset</button>
+      {billAmount > 0 && (
+        <>
+          <PayWithTip
+            billAmount={billAmount}
+            myRating={myRating}
+            friendRating={friendRating}
+          />
+          <button onClick={handleReset}>Reset</button>
+        </>
+      )}
     </div>
   );
 }
@@ -44,7 +48,8 @@ function BillInput({ billAmount, setBillAmount }) {
       <label>How much was the bill?</label>
       <input
         type="number"
-        value={billAmount}
+        value={billAmount || ""}
+        placeholder="Enter the bill amount"
         onChange={(e) => setBillAmount(Number(e.target.value))}
       />
     </div>
@@ -73,7 +78,8 @@ function PayWithTip({ billAmount, myRating, friendRating }) {
   const total = billAmount + tip;
   return (
     <h1>
-      You pay ${total} (${billAmount} + ${tip} tip)
+      You pay ${total.toFixed(2)} (
+      {tip > 0 ? `$${billAmount} + $${tip.toFixed(2)} tip` : "No tip"})
     </h1>
   );
 }
