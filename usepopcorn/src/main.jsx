@@ -8,6 +8,10 @@ const root = createRoot(document.getElementById("root"));
 
 root.render(
   <StrictMode>
-    <StarRating maxRating={5} />
+    <StarRating
+      messages={["Terrible", "Bad", "Okay", "Good", "Awesome"]}
+      defaultRating={3}
+    />
+    <StarRating maxRating={10} color="olive" size={28} className="test" />
   </StrictMode>
 );
