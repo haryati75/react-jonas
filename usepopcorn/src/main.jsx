@@ -1,23 +1,9 @@
-import { StrictMode, useState } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 // import App from "./App";
 // import "./index.css";
 import StarRating from "./StarRating";
-
-function Test() {
-  const [movieRating, setMovieRating] = useState(0);
-
-  return (
-    <div>
-      <StarRating
-        color="lightblue"
-        maxRating={10}
-        onSetRating={setMovieRating}
-      />
-      <p>This movie was rated {movieRating} stars</p>
-    </div>
-  );
-}
+import { Test } from "./Test";
 
 const root = createRoot(document.getElementById("root"));
 

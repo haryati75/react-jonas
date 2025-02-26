@@ -10,6 +10,7 @@ const starContainerStyle = {
   display: "flex",
 };
 
+// prop-types not available in React 19
 export default function StarRating({
   maxRating = 5,
   color = "#fcc419",
