@@ -65,6 +65,7 @@ function TabContent({ item }) {
   const [showDetails, setShowDetails] = useState(true);
   const [likes, setLikes] = useState(0);
 
+  // when component re-renders, this log will be printed
   console.log("rendering", item.summary);
 
   function handleInc() {
@@ -91,6 +92,9 @@ function TabContent({ item }) {
   }
 
   function handleUndoLater() {
+    // React 17 does not batch updates in timers
+    // React 18 will batch updates in timers
+    // check browser console for "rendering" logging
     setTimeout(handleUndo, 2000);
   }
 
