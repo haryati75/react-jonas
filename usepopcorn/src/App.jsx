@@ -31,12 +31,16 @@ export default function App() {
   }
 
   useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
     const fetchMovies = async () => {
       setIsLoading(true);
       setError("");
       try {
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+          { signal }
         );
 
         if (!res.ok) {
@@ -50,6 +54,7 @@ export default function App() {
         }
         setMovies(data.Search);
       } catch (error) {
+        if (error.name === "AbortError") return;
         setError(error?.message || "Something went wrong");
       } finally {
         setIsLoading(false);
@@ -63,6 +68,11 @@ export default function App() {
     }
 
     fetchMovies();
+
+    return () => {
+      controller.abort();
+      setMovies([]);
+    };
   }, [query]);
 
   return (
@@ -221,7 +231,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       title,
       year,
       poster,
-      runtime: parseInt(runTime),
+      runtime: isNaN(parseInt(runTime)) ? 0 : parseInt(runTime),
       imdbRating: parseFloat(imdbRating),
       userRating,
     };
@@ -231,12 +241,29 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   }
 
   useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") {
+        onCloseMovie();
+      }
+    };
+    document.addEventListener("keydown", handleEsc);
+
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [onCloseMovie]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
     const fetchMovie = async () => {
       try {
         setIsLoading(true);
         setError("");
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
+          `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`,
+          { signal }
         );
 
         if (!res.ok) {
@@ -246,7 +273,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
         const data = await res.json();
         setMovie(data);
       } catch (error) {
-        console.error(error);
+        if (error.name === "AbortError") return;
         setError(error?.message || "Something went wrong");
       } finally {
         setIsLoading(false);
@@ -254,6 +281,12 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     };
 
     fetchMovie();
+
+    return () => {
+      controller.abort();
+      setMovie(null);
+      setError("");
+    };
   }, [selectedId]);
 
   useEffect(() => {
