@@ -56,6 +56,7 @@ export default function App() {
       } catch (error) {
         if (error.name === "AbortError") return;
         setError(error?.message || "Something went wrong");
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
@@ -67,6 +68,7 @@ export default function App() {
       return;
     }
 
+    handleCloseMovie();
     fetchMovies();
 
     return () => {
@@ -275,6 +277,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       } catch (error) {
         if (error.name === "AbortError") return;
         setError(error?.message || "Something went wrong");
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
