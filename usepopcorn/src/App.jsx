@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 
 const average = (arr) =>
@@ -9,10 +9,18 @@ const KEY = "64772617";
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
+
+  // make watched use localStorage to persist the data on page refresh
+  // const [watched, setWatched] = useState([]);
+  // use callback in the useState to avoid localStorage.getItem() on every render
+  // callback function must be pure and no arguments
+  const [watched, setWatched] = useState(() => {
+    const savedWatched = localStorage.getItem("watched");
+    return savedWatched ? JSON.parse(savedWatched) : [];
+  });
 
   function handleSelectMovie(id) {
     setSelectedId((prev) => (prev === id ? null : id));
@@ -24,11 +32,18 @@ export default function App() {
 
   function handleAddWatched(movie) {
     setWatched((prev) => [...prev, movie]);
+
+    // moved to useEffect below
+    // localStorage.setItem("watched", JSON.stringify([...watched, movie]));
   }
 
   function handleDeleteWatched(id) {
     setWatched((prev) => prev.filter((movie) => movie.imdbID !== id));
   }
+
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
   // this can be optimized by using a debounce function as a custom hook
   // useEffect can be replaced with an event handler on the Search input element
@@ -148,8 +163,37 @@ function Logo() {
 }
 
 function Search({ query, setQuery }) {
+  // do not do this for DOM manipulation, instead use refs
+  // useEffect(() => {
+  //   document.querySelector(".search").focus();
+  // }
+  // , []);
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    function callback(e) {
+      if (document.activeElement === inputRef.current) return;
+
+      if (e.key === "Enter") {
+        console.log("Enter key pressed");
+
+        // inputRef.current is the DOM element
+        inputRef.current.focus();
+        setQuery("");
+      }
+    }
+
+    document.addEventListener("keydown", callback);
+
+    return () => {
+      document.removeEventListener("keydown", callback);
+    };
+  }, [setQuery]);
+
   return (
     <input
+      ref={inputRef}
       className="search"
       type="text"
       placeholder="Search movies..."
@@ -228,6 +272,14 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     Director: director,
     Genre: genre,
   } = movie || {};
+
+  // #region Breaking the rules of hooks
+  // 1. conditionally using hooks is not allowed
+  // if (imdbRating > 8) {const [isHighRating, setIsHighRating] = useState(true); }
+
+  // 2. early return is not allowed before all hooks are called
+  // if (imdbRating > 8) return <p>🌟 This is a high rated movie!</p>;
+  // #endregion
 
   function handleAddWatched() {
     const newWatchedMovie = {
