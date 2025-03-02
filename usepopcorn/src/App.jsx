@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 
@@ -20,22 +20,11 @@ export default function App() {
     return savedWatched ? JSON.parse(savedWatched) : [];
   });
 
+  const { movies, isLoading, error } = useMovies(query);
+
   function handleSelectMovie(id) {
     setSelectedId((prev) => (prev === id ? null : id));
   }
-
-  // function handleCloseMovie() {
-  //   setSelectedId(null);
-  // }
-
-  // have to declare the function as a callback to avoid infinite loop
-  // because the function is recreated on every render
-  // since this requires arrow function which does not get hoisted, it needs to declare before the useMovies
-  const handleCloseMovie = useCallback(function () {
-    setSelectedId(null);
-  }, []);
-
-  const { movies, isLoading, error } = useMovies(query, handleCloseMovie);
 
   function handleAddWatched(movie) {
     setWatched((prev) => [...prev, movie]);
@@ -46,6 +35,10 @@ export default function App() {
 
   function handleDeleteWatched(id) {
     setWatched((prev) => prev.filter((movie) => movie.imdbID !== id));
+  }
+
+  function handleCloseMovie() {
+    setSelectedId(null);
   }
 
   useEffect(() => {
