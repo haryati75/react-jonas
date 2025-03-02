@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import StarRating from "./StarRating";
+import { useMovies } from "./useMovies";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0).toFixed(1);
@@ -8,9 +9,6 @@ const KEY = "64772617";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
   // make watched use localStorage to persist the data on page refresh
@@ -26,9 +24,18 @@ export default function App() {
     setSelectedId((prev) => (prev === id ? null : id));
   }
 
-  function handleCloseMovie() {
+  // function handleCloseMovie() {
+  //   setSelectedId(null);
+  // }
+
+  // have to declare the function as a callback to avoid infinite loop
+  // because the function is recreated on every render
+  // since this requires arrow function which does not get hoisted, it needs to declare before the useMovies
+  const handleCloseMovie = useCallback(function () {
     setSelectedId(null);
-  }
+  }, []);
+
+  const { movies, isLoading, error } = useMovies(query, handleCloseMovie);
 
   function handleAddWatched(movie) {
     setWatched((prev) => [...prev, movie]);
@@ -44,55 +51,6 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("watched", JSON.stringify(watched));
   }, [watched]);
-
-  // this can be optimized by using a debounce function as a custom hook
-  // useEffect can be replaced with an event handler on the Search input element
-  useEffect(() => {
-    const controller = new AbortController();
-    const { signal } = controller;
-
-    const fetchMovies = async () => {
-      setIsLoading(true);
-      setError("");
-      try {
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-          { signal }
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch movies");
-        }
-
-        const data = await res.json();
-
-        if (data.Error) {
-          throw new Error(data.Error);
-        }
-        setMovies(data.Search);
-      } catch (error) {
-        if (error.name === "AbortError") return;
-        setError(error?.message || "Something went wrong");
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (query.length < 3) {
-      setMovies([]);
-      setError("");
-      return;
-    }
-
-    handleCloseMovie();
-    fetchMovies();
-
-    return () => {
-      controller.abort();
-      setMovies([]);
-    };
-  }, [query]);
 
   return (
     <>
