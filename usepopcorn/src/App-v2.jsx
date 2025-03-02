@@ -30,8 +30,6 @@ export default function App() {
     setWatched((prev) => prev.filter((movie) => movie.imdbID !== id));
   }
 
-  // this can be optimized by using a debounce function as a custom hook
-  // useEffect can be replaced with an event handler on the Search input element
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
