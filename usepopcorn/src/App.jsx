@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
+import { useLocalStorageState } from "./useLocalStorageState";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0).toFixed(1);
@@ -11,16 +12,9 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
-  // make watched use localStorage to persist the data on page refresh
-  // const [watched, setWatched] = useState([]);
-  // use callback in the useState to avoid localStorage.getItem() on every render
-  // callback function must be pure and no arguments
-  const [watched, setWatched] = useState(() => {
-    const savedWatched = localStorage.getItem("watched");
-    return savedWatched ? JSON.parse(savedWatched) : [];
-  });
-
+  // custom hooks
   const { movies, isLoading, error } = useMovies(query);
+  const [watched, setWatched] = useLocalStorageState([], "watched");
 
   function handleSelectMovie(id) {
     setSelectedId((prev) => (prev === id ? null : id));
@@ -28,9 +22,6 @@ export default function App() {
 
   function handleAddWatched(movie) {
     setWatched((prev) => [...prev, movie]);
-
-    // moved to useEffect below
-    // localStorage.setItem("watched", JSON.stringify([...watched, movie]));
   }
 
   function handleDeleteWatched(id) {
@@ -40,10 +31,6 @@ export default function App() {
   function handleCloseMovie() {
     setSelectedId(null);
   }
-
-  useEffect(() => {
-    localStorage.setItem("watched", JSON.stringify(watched));
-  }, [watched]);
 
   return (
     <>
@@ -127,8 +114,6 @@ function Search({ query, setQuery }) {
       if (document.activeElement === inputRef.current) return;
 
       if (e.key === "Enter") {
-        console.log("Enter key pressed");
-
         // inputRef.current is the DOM element
         inputRef.current.focus();
         setQuery("");
