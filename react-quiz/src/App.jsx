@@ -6,6 +6,7 @@ import Error from "./components/Error";
 import StartScreen from "./components/StartScreen";
 import Question from "./components/Question";
 import NextButton from "./components/NextButton";
+import Progress from "./components/Progress";
 
 const initialState = {
   questions: [],
@@ -58,6 +59,10 @@ export default function App() {
   const { questions, status, index, answer, points } = state;
 
   const numQuestions = questions.length;
+  const maximumPoints = questions.reduce(
+    (acc, question) => acc + question.points,
+    0
+  );
 
   useEffect(() => {
     fetch("http://localhost:4000/questions")
@@ -77,6 +82,13 @@ export default function App() {
         )}
         {status === "active" && (
           <>
+            <Progress
+              index={index}
+              numQuestions={numQuestions}
+              points={points}
+              maximumPoints={maximumPoints}
+              answer={answer}
+            />
             <Question
               question={questions.at(index)}
               dispatch={dispatch}
