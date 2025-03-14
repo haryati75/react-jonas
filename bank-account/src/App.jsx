@@ -26,6 +26,9 @@ const initialState = {
   isActive: false,
 };
 
+// add guard clauses to the reducer to prevent invalid state transitions
+// do not depend on UI to prevent invalid state transitions
+// always check the state and act accordingly
 function reducer(state, action) {
   if (!state.isActive && action.type !== "openAccount") {
     return state;
@@ -49,6 +52,10 @@ function reducer(state, action) {
         balance: state.balance - action.payload,
       };
     case "requestLoan":
+      if (state.loan !== 0) {
+        return state;
+      }
+
       return {
         ...state,
         loan: action.payload,
@@ -61,6 +68,10 @@ function reducer(state, action) {
         balance: state.balance - state.loan,
       };
     case "closeAccount":
+      if (state.balance !== 0 || state.loan !== 0) {
+        return state;
+      }
+
       return {
         ...state,
         isActive: false,
@@ -111,7 +122,7 @@ export default function App() {
       <p>
         <button
           onClick={() => dispatch({ type: "requestLoan", payload: 5000 })}
-          disabled={!isActive || loan !== 0}
+          disabled={!isActive}
         >
           Request a loan of 5000
         </button>
@@ -127,7 +138,7 @@ export default function App() {
       <p>
         <button
           onClick={() => dispatch({ type: "closeAccount" })}
-          disabled={!isActive || balance !== 0 || loan !== 0}
+          disabled={!isActive}
         >
           Close account
         </button>
