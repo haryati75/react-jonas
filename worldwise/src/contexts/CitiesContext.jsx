@@ -51,7 +51,7 @@ function CitiesProvider({ children }) {
       const data = await res.json();
       setCities((prevCities) => [...prevCities, data]);
     } catch {
-      alert("There was an error fetching the data");
+      alert("There was an error creating the city");
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +65,7 @@ function CitiesProvider({ children }) {
       });
       setCities((prevCities) => prevCities.filter((city) => city.id !== id));
     } catch {
-      alert("There was an error fetching the data");
+      alert("There was an error deleting the city");
     } finally {
       setIsLoading(false);
     }
