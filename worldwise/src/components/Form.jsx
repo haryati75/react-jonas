@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { useURLPosition } from "../hooks/useURLPosition";
-import { useCities } from "../contexts/CitiesContext";
+import { useCities } from "../contexts/useCities";
 
 import styles from "./Form.module.css";
 import Button from "./Button";
@@ -14,7 +14,7 @@ import Message from "./Message";
 import Spinner from "./Spinner";
 import { useNavigate } from "react-router-dom";
 
-export function convertToEmoji(countryCode) {
+function convertToEmoji(countryCode) {
   const codePoints = countryCode
     .toUpperCase()
     .split("")

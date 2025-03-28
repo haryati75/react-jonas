@@ -5,7 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
 polyfillCountryFlagEmojis();
 
-import { CitiesProvider } from "./contexts/CitiesContext";
+import { CitiesProvider } from "./contexts/CitiesProvider";
 import { AuthProvider } from "./contexts/FakeAuthProvider";
 import ProtectedRoute from "./pages/ProtectedRoute";
 
