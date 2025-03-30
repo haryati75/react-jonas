@@ -15,6 +15,7 @@ function AccountOperations() {
     balance,
     loan: currentLoan,
     loanPurpose: currentLoanPurpose,
+    isLoading,
   } = account;
 
   console.log("Balance", balance);
@@ -68,7 +69,9 @@ function AccountOperations() {
             <option value="GBP">British Pound</option>
           </select>
 
-          <button onClick={handleDeposit}>Deposit {depositAmount}</button>
+          <button onClick={handleDeposit} disabled={isLoading}>
+            {isLoading ? "Converting..." : `Deposit ${depositAmount}`}
+          </button>
         </div>
 
         <div>
