@@ -22,6 +22,11 @@ export default [
       "react-refresh": reactRefresh,
       react,
     },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
