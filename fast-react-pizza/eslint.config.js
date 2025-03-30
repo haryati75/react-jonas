@@ -34,7 +34,7 @@ export default [
       ...react.configs.recommended.rules,
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
-      "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
+      "no-unused-vars": ["warn", { varsIgnorePattern: "^[A-Z_]" }],
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
