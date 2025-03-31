@@ -5,7 +5,7 @@ import MenuItem from "./MenuItem";
 function Menu() {
   // render-as-you-fetch strategy
   const menu = useLoaderData();
-  console.log(menu);
+
   return (
     <ul>
       {menu.map((pizza) => (
