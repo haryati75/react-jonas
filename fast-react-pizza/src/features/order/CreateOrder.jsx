@@ -109,7 +109,7 @@ export async function action({ request }) {
 
   // if everything is ok, we can create the order and redirect to the order page
   const newOrder = await createOrder(order);
-  return redirect(`/order/${newOrder.id}`);
+  return redirect(`/order/${newOrder.id}`); // cannot use navigate hook here
 }
 
 export default CreateOrder;

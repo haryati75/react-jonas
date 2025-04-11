@@ -21,7 +21,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/menu",
+        path: "menu",
         element: <Menu />,
         loader: menuLoader, // render-as-you-fetch strategy
         errorElement: <Error />,
